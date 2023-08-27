@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>monomicroservices.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="the-monolith-vs-microservices-debate-misses-the-point">The Monolith vs Microservices Debate Misses the Point</h1>
+<p>Percy Wegmann (August 2023)</p>
+<p>So, you need to build a system that exposes some web services. You're trying to decide between a microservices architecture and a monolithic one. The typical advice from organizations like <a href="https://aws.amazon.com/compare/the-difference-between-monolithic-and-microservices-architecture/">Amazon AWS</a> and <a href="https://www.atlassian.com/microservices/microservices-architecture/microservices-vs-monolith">Atlassian</a> confuses logical and physical architecture and gives the false impression that it's purely an either/or choice. By thinking of the logical and physical architecture separately, we empower ourselves to design solutions that meet the unique needs of our own organizations.</p>
+<p>In this article, I'll explain the logical architecture of Amazon's example, show how Amazon translates this logical architecture into the stereotypical monolithic and microservices deployment architectures, demonstrate an alternative deployment architecture that shows how to blend a microservices logical architecture with a monolithic physical archicture, discuss the benefits of such an approach in the context of the claimed benefits of microservices, and finish with some thoughts on where each style of deployment may be appropriate.</p>
+<h2 id="definitions">Definitions</h2>
+<p>Service - A software component with a well defined interface that performs some kind of work on behalf of other software components that interact with the service exclusively through its published interface.</p>
+<p>Domain Object - A software component that encapsulates state used by services, and which may refer to and interact with other domain objects used by that same service. Domain objects are private to a service and invisible to other services.</p>
+<h2 id="logical-architecture-of-a-monolith">Logical Architecture of a Monolith</h2>
+<img src="http://www.plantuml.com/plantuml/svg/LOzD3eD028Ntd88BU0SFO9EcFmSm3j5952OCjekcTwzMfisiW8_t7g7DrgkjompjhuD1bYHCR7WIbZdQT2Lzn87m1OZ_xJsJvegS9LjDRfDI7tQMH2qohcxoCRd3HtFv6-12Oyn6YasG9pTkx6JSP1NQZnPon7MRqG-NHGc6bZXy_ptg1m00" alt="uml diagram">
+<p>This UML 2.0 <a href="https://developer.ibm.com/articles/the-component-diagram/">Component Diagram</a> shows a more fully fleshed out version of Amazon's hypothetical monolith. The <code>MonolithService</code> uses three different domain objects internally to represent its data, and it exposes various interfaces to the outside world to allow managing that state. The example only shows a subset of the interfaces that would be available on a full implementation of such a system.</p>
+<p>The MonolithService internally uses multiple domain objects, <code>Users</code>, <code>Threads</code> and <code>Posts</code>. The monolith exposes functions for registering users, logging in, posting messages and listing threads, which it implements by manipulating these domain objects.</p>
+<p>In this kind of architecture, it's not unusual for the domain objects to become tightly coupled, for example modeling a user's posts as a list on the user domain object. As Amazon mentions, &quot;small changes&quot; like altering the structure of the <code>Users</code> model can &quot;introduce greater risks&quot; since they can &quot;impact the entire code base&quot;. Such coupling created at the domain level also makes it harder to independently evolve each of these domains independently, leading to a system that becomes more and more difficult to maintain over time.</p>
+<h2 id="decoupling-the-monolith">Decoupling the Monolith</h2>
+<img src="http://www.plantuml.com/plantuml/svg/RP113eCW44NtSugvW5TeN7Jfecdj0OnEB8ao18PsqVJkHGG3YIk6_-S_VcYT35Ryka1xJ33oQbYJ5dmwiW-oRpKIVW6nTbnG35jH6drnPIzeu5ToRkpadBCv1KTUbeR9rUa-YkVvFWKEWed0aB_Jh9oGnMRYZsvInOxdi5H9MuMixEahBIGKgzL65uZfnMpanc2ISi4Y3j2IdkB_xkSV" alt="uml diagram">
+<p>We can solve the coupling inherent in the monolithic architecture by ... decoupling! Each area of the system now gets its own service, encapsulating its respective domain objects. Any interdependencies between these services are handled via their well-defined public APIs, so if for example the <code>UserService</code> needs to delete posts as a result of a user being deleted, it must now do this via an explicitly exposed API on the <code>PostService</code> like <code>DeletePosts</code>.</p>
+<p>In this architecture, it becomes possible to independently evolve the implementation of each component without risking the integrity of the entire system.</p>
+<p>This looks a lot like the Microservices architecture that Amazon describes, but you'll note that we haven't yet discussed things like where the components are running, what language they're written in, what protocols they use to communicate with each other and their clients, etc. These are considerations addressed by the deployment architecture.</p>
+<h2 id="monolithic-physical-architecture">Monolithic Physical Architecture</h2>
+<img src="http://www.plantuml.com/plantuml/svg/XL2x2iCm3Dpr5Vw1v0Co5DF7ra99qgbaS6EH65mRBBiTIl-zYVEWaC5QT1B7dKwSl70-F3Nm5K6hRP3iOetLolS77SYZOnzWGzsNTONkfLfiu0jGOgSY9vFsRR8jgM3bgQhXR3jbKgIh9PyK6kpgtg6GbAA255uy1E4QwBXVijm87JKJdkNcQJo2OhQDBij7mtptfrUmG4W078sClvpw3m00" alt="uml diagram">
+<p>This represents a fairly typical deployment of a monolithic service, with a cluster of compute nodes hosting the service itself, a single database storing persistent state, and interfaces exposed via REST over HTTP. There's not a lot to deploy, and because the entire system uses a single database, operations that involve coordination across multiple domain models can easily be performed in a single database transaction. As Amazon notes, this does typically require that all of the service logic to be written in the same language, and because the logical architecture allows for a high degree of coupling between domains, the system can grow increasingly difficult to evolve and maintain in the future.</p>
+<h2 id="stereotypical-microservices-architecture">Stereotypical Microservices Architecture</h2>
+<img src="http://www.plantuml.com/plantuml/svg/VP9D3e8m48NtSufUG0x0mX35dGkZk38kAfqW2KBIQNLXlBlqbuA9R4gctynxRzA259TAFpeeuX_KtQ05EnFARQT9eMHlOEDtCQKJocTRunK-0Qpk4hbOeAxu2ny6KWlKb5Amn0uLcYgnbHXU_Oeb2CnSU63DagQS7NUd2k28JMjr_91PeuVsGzFs_m0pCTwdJiE0KS9bZMONsOCTmHM_SKAxs7AJxfHixWYu_Wdny-UGyJ8XDhW5vkl9ZALixJLpfWa95WOZ57G3biQDaDFr21JO2_jwtFa5" alt="uml diagram">
+<p>This represents the stereotypical microservices deployment. Each service gets its own compute cluster (whether physical or containerized) and its own database. These services expose interfaces for consumption by clients, which may be fronted by an <a href="https://microservices.io/patterns/apigateway.html">API Gateway</a> (not shown). There's more to deploy, but because each service is deployed independently, they can be implemented using different programming languages and tech stacks, and scaled independently. Unfortunately, operations that involve coordination between services (for example deleting a users' posts when the user is deleted) now can't be handled atomically with just a simple database transaction. Instead, they require some fairly complicated <a href="https://cloud.google.com/architecture/transactional-workflows-microservices-architecture-google-cloud">gymnastics</a> that can be difficult to implement and even more difficult to monitor and debug.</p>
+<h2 id="decoupled-monolith">Decoupled Monolith</h2>
+<img src="http://www.plantuml.com/plantuml/svg/VP5D3i8W48NtSmekq1wWYwRHkjF4sBeoBh1CsYPO4WPqORox_HSQBHjWyl7Up2CXmxMnTmd9V892AYlOGJLArgRQIai6DNi1QzVbJAWpr8-wmEjGoIkDNFYreoBZLzntB13gsGGnIr6YmGwcddBk8xEGUWF02SkwxsWYNEc8dNPP3djLriqQqAd-j9W4MejXi6yd_g0Z288RVkE4Ss3fnisAl9J8oOVwSVnWmiugZ1sjY5b2WeNv2kWEyn-311lH__kmVm00" alt="uml diagram">
+<p>This approach deploys a decoupled microservices-like logical architecture into a physical architecture more similar to a monolith. This gives the benefits of decoupled services that can evolve independently without having to worry about affecting the whole system, combined with the simplicity of a monolithic deployment model that avoids the overhead of coordinating services across process boundaries. The services are still &quot;micro&quot;, they just happen to run in the same process space.</p>
+<h2 id="but-what-about">But what about ...</h2>
+<p>Typical articles about microservices architectures tout various benefits. Does the Decoupled Monolith deliver on these?</p>
+<h3 id="innovate-faster">Innovate faster</h3>
+<p>Amazon claims that a downside of monolithic architectures is that</p>
+<blockquote>
+<p>Developers cannot rebuild certain parts of the code base with new technological frameworks, which delays your organization in adopting modern technological trends.</p>
+</blockquote>
+<p>I'll confess here that I have a bias against frameworks. In my experience, frameworks like Spring, Django, etc are a crutch that helps projects get off the ground quickly but that ends up slowing them down in the long term. Because frameworks determine the overall structure of your application and aren't typically made to be readily interchangeable, they are indeed difficult to replace. In the Go world, we tend to avoid frameworks and focus instead on using smaller libraries that are easily swapped out. It's rare that a &quot;new shiny thing&quot; comes along that confers a significant advantage over what came before, but in a properly architected application, it's not too hard to swap it in. Furthermore, if something convincingly superior comes along, why limit its benefits to just one of your services instead of applying it across the board?</p>
+<p>The other aspect to consider here is team flexbility. Maybe you work in a giant company where each &quot;microservice&quot; has a team of 10 engineers working on it, but in a smaller company and especally a startup, developers often need to wear many hats. Have you ever had to step into a system using a different language, different design patterns, and/or different deployment environments in order to help out with the latest priority project? In my experience, that's the exact opposite of fast. By contrast, in a decoupled monolith, everything tends towards consistency, allowing any developer to step into any service as projects demand and staffing allows. That's agility.</p>
+<h3 id="reduce-risks">Reduce risks</h3>
+<p>Amazon states that in a monolithic application</p>
+<blockquote>
+<p>A minor error in the code base can cause the whole application to fail. Such incidents have the potential to cause severe service outages and affect all active users.</p>
+</blockquote>
+<p>Furthermore</p>
+<blockquote>
+<p>when developers introduce new changes to a monolithic application, they must retest and redeploy the entire system</p>
+</blockquote>
+<p>Microservices aren't immune to this. What happens in the example system if the User service goes down and people can't log in anymore, or the Thread service goes down and users can't view threads anymore? Is that a significantly better user experience than the entire site going down? And what's so bad about retesting an entire system if one component changes? That's a good practice no matter what your architecture, and if you have good test coverage and thoughtfully implemented tests that can run in parallel, complete relatively quickly and don't fail spuriously, running tests should be something to cherish, not to avoid. And oh by the way, if your tests don't have to simulate interactions across process boundaries in a complex microservices architecture, they'll likely be easier to write and quicker to execute anyway.</p>
+<h3 id="accelerate-time-to-market">Accelerate time to market</h3>
+<p>Per Amazon, a microservices architecture accelerates development because</p>
+<blockquote>
+<p>each developer focuses on a smaller chunk of code instead of a large one. When developers create a specific microservice, they don't need to understand how other microservices work. They only need to use the appropriate APIs, which are faster and easier to learn.</p>
+</blockquote>
+<p>This is almost exclusively the result of applying the microservices pattern to the logical architecture. In the decoupled monolith, developers can focus on specific services too, and don't need to know about the implementation details of other services, since their services interact purely at the level of interfaces. They do need to know about shared components like logging libraries, but being able to reuse boilerplate stuff like that is more of a benefit than a burden--the cognitive load is limited to understanding and consistently applying corporate standard programming patterns, not having to understand all of the corporations systems in detail.</p>
+<h3 id="reduce-total-cost-of-ownership">Reduce total cost of ownership</h3>
+<p>According to Amazon</p>
+<blockquote>
+<p>You can scale microservice applications horizontally by adding compute resources on demand. You only have to add resources for the individual service, not the entire application. To scale monolithic systems, companies must upgrade memory and processing power for the application as a whole, which is more expensive.</p>
+</blockquote>
+<p>This is true only in as much as your services can't scale horizontally. Making the compute cluster scale horizontally is usually not too hard, and even the database tier can be scaled horizontally using technologies like Google's <a href="https://cloud.google.com/spanner">Cloud Spanner</a> or Amazon's own <a href="https://aws.amazon.com/rds/aurora/">Aurora</a>. Admittedly, these are not without their own complexities, but the days of applications that can't scale horizontally have largely passed.</p>
+<h2 id="the-escape-hatch">The escape hatch</h2>
+<p>So what happens if you do have a service that can't scale horizontally, or a service that absolutely has to be written in a specific language or deployed into a specific, unique environment? Go ahead, factor it out of the monolith. Since services in the decoupled monolith communicate with each other through interfaces, aside from maybe participating in the same database transaction, they largely don't care whether they're in the same process or not. But, just because you may have one or two services that benefit from this style of deployment doesn't mean that the rest of the system has to be split apart.</p>
+<h2 id="what-situations-might-warrant-a-microservices-deployment-architecture">What situations might warrant a microservices deployment architecture?</h2>
+<p>You'll notice that the Amazon example we've worked with involves a relatively tightly focused system that largely depends on all three parts of it working in concert. Similarly, the example of Netflix cited by the Atlassian article is really just one application - a video streaming platform.</p>
+<p>Atlassian's own experience is meaningfully different. Atlassian operates a suite of products including bug tracking, version control, project management, incident management and others. These products are only loosely related in that they share a user model and can link to each other in useful ways (for example, a bug can link to a pull request in the source repository). You can imagine that such links can also exist to/from external alternatives to these apps, so for example you could link from a Jira ticket to a GitHub PR. This means that in practice, these applications are extremely loosely coupled the way that different websites and applications are loosely coupled on the internet.</p>
+<p>From an organizational perspective, each Atlassian application probably has its own product and project managers, its own development team, its own schedule, and so on. In this case, does it make sense to force all of them to coordinate in a single source repo and deploy to a single cluster, or does it make more sense to allow them to develop and deploy independently? Probably the latter. Is that a &quot;microservices&quot; architecture, or is that just a very large company with each division running its own monolith on some shared infrastructure like a Kubernetes cluster? I'm not sure the distinction matters.</p>
+<p>Ultimately, it's not an either/or choice between microservices or monoliths. First, figure out whether you're dealing with one system (like a user forum or video streaming service), or multiple systems (like Atlassian's suite of products). Then, for each system, start by designing a logical architecture that factors the system well and makes it easy to evolve and maintain. Lastly, figure out how to deploy this logical architecture into a physical architecture that minimizes complexity while still meeting your scalability needs. If the resulting system doesn't fit neatly into one of the stereotypical boxes, congratulations, you've just designed something appropriate to your own needs!</p>
+
+</body>
+</html>
